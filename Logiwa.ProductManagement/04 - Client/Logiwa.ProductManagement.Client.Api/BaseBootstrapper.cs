@@ -2,6 +2,8 @@
 using Logiwa.ProductManagement.Database.Data.Factory;
 using Logiwa.ProductManagement.Database.Data.MicrosoftSQLServer;
 using Logiwa.ProductManagement.Database.Data.PostgreSQL;
+using Logiwa.ProductManagement.Database.Repositories.CategoryRepository;
+using Logiwa.ProductManagement.Database.Repositories.ProductRepository;
 using Logiwa.ProductManagement.Database.UnitOfWork.Abstracts;
 using Logiwa.ProductManagement.Database.UnitOfWork.Concrete;
 using Microsoft.EntityFrameworkCore;
@@ -18,27 +20,19 @@ namespace Logiwa.ProductManagement.Client.Api
         private string databaseProvider;
 
 
-        public BaseBootstrapper(IServiceCollection services, IConfiguration configuration) { this.services = services; this.configuration = configuration; this.databaseProvider = this.configuration.GetValue<string>("DatabaseProvider");  Install(); }
+        public BaseBootstrapper(IServiceCollection services, IConfiguration configuration) { this.services = services; this.configuration = configuration; this.databaseProvider = this.configuration.GetValue<string>("DatabaseProvider"); Install(); }
 
         private void Install()
         {
             services.AddSingleton<IDbContextFactory, DbContextFactory>();
             services.AddSingleton<IUnitOfWorkFactory, UnitOfWorkFactory>();
 
-            if(databaseProvider == "MSSQL")
-            {
-                using (var context = new LPMMSSQLDbContext())
-                {
-                    context.Database.Migrate();
-                }
-            }
-            else if(databaseProvider == "POSTGRESQL")
-            {
-                using (var context = new LPMPostgreSQLDbContext())
-                {
-                    context.Database.Migrate();
-                }
-            }
+
+            services.AddSingleton<IProductRepository, ProductRepository>();
+            services.AddSingleton<ICategoryRepository, CategoryRepository>();
+
+            if (databaseProvider == "MSSQL") { using (var context = new LPMMSSQLDbContext()) { context.Database.Migrate(); } }
+            else if (databaseProvider == "POSTGRESQL") { using (var context = new LPMPostgreSQLDbContext()) { context.Database.Migrate(); } }
 
         }
     }

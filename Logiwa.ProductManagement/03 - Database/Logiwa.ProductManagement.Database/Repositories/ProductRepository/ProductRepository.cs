@@ -4,11 +4,11 @@ using Logiwa.ProductManagement.Entities.Product;
 
 namespace Logiwa.ProductManagement.Database.Repositories.ProductRepository
 {
-    public class CategoryRepository : GenericRepository<Product, int>, ICategoryRepository
+    public class ProductRepository : GenericRepository<Product, int>, IProductRepository
     {
         private readonly IUnitOfWorkFactory unitOfWorkFactory;
 
-        public CategoryRepository(IUnitOfWorkFactory unitOfWorkFactory) : base(unitOfWorkFactory)
+        public ProductRepository(IUnitOfWorkFactory unitOfWorkFactory) : base(unitOfWorkFactory)
         {
             this.unitOfWorkFactory = unitOfWorkFactory;
         }

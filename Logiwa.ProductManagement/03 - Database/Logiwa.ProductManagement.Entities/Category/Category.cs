@@ -11,6 +11,7 @@ namespace Logiwa.ProductManagement.Entities.Category
     public class Category : EntityBase<int>
     {
         public string Name { get; set; }
+        public int MinimumStockQuantity { get; set; }
         public virtual ICollection<Product.Product> Products { get; set; }
     }
 }

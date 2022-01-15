@@ -1,4 +1,8 @@
-﻿using Logiwa.ProductManagement.Database.Data;
+﻿using FluentValidation;
+using Logiwa.ProductManagement.Business.Contracts.Dtos.CategoryDtos;
+using Logiwa.ProductManagement.Business.Contracts.Dtos.ProductDtos;
+using Logiwa.ProductManagement.Business.Contracts.Validations;
+using Logiwa.ProductManagement.Database.Data;
 using Logiwa.ProductManagement.Database.Data.Factory;
 using Logiwa.ProductManagement.Database.Data.MicrosoftSQLServer;
 using Logiwa.ProductManagement.Database.Data.PostgreSQL;
@@ -27,9 +31,11 @@ namespace Logiwa.ProductManagement.Client.Api
             services.AddSingleton<IDbContextFactory, DbContextFactory>();
             services.AddSingleton<IUnitOfWorkFactory, UnitOfWorkFactory>();
 
-
             services.AddSingleton<IProductRepository, ProductRepository>();
             services.AddSingleton<ICategoryRepository, CategoryRepository>();
+
+            services.AddTransient<IValidator<ProductDto>, ProductValidation>();
+            services.AddTransient<IValidator<CategoryDto>, CategoryValidation>();
 
             if (databaseProvider == "MSSQL") { using (var context = new LPMMSSQLDbContext()) { context.Database.Migrate(); } }
             else if (databaseProvider == "POSTGRESQL") { using (var context = new LPMPostgreSQLDbContext()) { context.Database.Migrate(); } }

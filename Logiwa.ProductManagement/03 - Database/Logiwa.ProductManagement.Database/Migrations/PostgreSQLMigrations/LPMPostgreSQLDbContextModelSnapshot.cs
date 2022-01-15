@@ -33,6 +33,9 @@ namespace Logiwa.ProductManagement.Database.Migrations.PostgreSQLMigrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
+                    b.Property<int>("MinimumStockQuantity")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
 

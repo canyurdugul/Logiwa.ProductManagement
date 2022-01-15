@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Logiwa.ProductManagement.Client.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/api/category")]
     public class CategoryController : ControllerBase
     {
         private static readonly string[] Summaries = new[]

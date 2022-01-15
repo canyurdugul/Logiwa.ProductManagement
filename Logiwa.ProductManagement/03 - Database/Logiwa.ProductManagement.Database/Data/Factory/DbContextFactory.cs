@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Logiwa.ProductManagement.Database.Data.MicrosoftSQLServer;
+using Logiwa.ProductManagement.Database.Data.PostgreSQL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,17 +10,16 @@ namespace Logiwa.ProductManagement.Database.Data.Factory
 {
     public interface IDbContextFactory
     {
-        DbContextModel GetDbContextModel();
+        DbContextModel GetDbContextModel(string databaseProvider);
     }
 
     public class DbContextFactory : IDbContextFactory
     {
-        public DbContextModel GetDbContextModel()
+        public DbContextModel GetDbContextModel(string databaseProvider)
         {
-            return new DbContextModel
-            {
-                DbContext = new LogiwaProductManagementDbContext()
-            };
+            if (databaseProvider == "MSSQL") { return new DbContextModel { DbContext = new LPMMSSQLDbContext() }; }
+            else if (databaseProvider == "POSTGRESQL") { return new DbContextModel { DbContext = new LPMPostgreSQLDbContext() }; }
+            else throw new Exception("No provider found");
         }
     }
 }

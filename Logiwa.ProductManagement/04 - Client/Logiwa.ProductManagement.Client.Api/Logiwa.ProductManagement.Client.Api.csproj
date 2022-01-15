@@ -6,6 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\03 - Database\Logiwa.ProductManagement.Database\Logiwa.ProductManagement.Database.csproj" />
   </ItemGroup>
 
 </Project>

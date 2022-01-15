@@ -16,9 +16,14 @@ namespace Logiwa.ProductManagement.Client.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IWebHostEnvironment hostingEnvironment)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(hostingEnvironment.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{hostingEnvironment.EnvironmentName}.json", optional: true);
+            builder.AddEnvironmentVariables();
+            this.Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -28,6 +33,12 @@ namespace Logiwa.ProductManagement.Client.Api
         {
 
             services.AddControllers();
+
+            #region Service installation
+            var bootstrapper = new BaseBootstrapper(services, this.Configuration);
+            #endregion
+
+            services.AddHttpContextAccessor();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Logiwa.ProductManagement.Client.Api", Version = "v1" });
@@ -37,12 +48,10 @@ namespace Logiwa.ProductManagement.Client.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Logiwa.ProductManagement.Client.Api v1"));
-            }
+            if (env.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Logiwa.ProductManagement.Client.Api v1"));
 
             app.UseHttpsRedirection();
 

@@ -1,10 +1,10 @@
 ﻿using Logiwa.ProductManagement.Database.Repositories.GenericRepository.Concrete;
 using Logiwa.ProductManagement.Database.UnitOfWork.Abstracts;
-using Logiwa.ProductManagement.Entities.Category;
+using Logiwa.ProductManagement.Entities.Product;
 
 namespace Logiwa.ProductManagement.Database.Repositories.CategoryRepository
 {
-    public class CategoryRepository : GenericRepository<Category, int>, ICategoryRepository
+    public class CategoryRepository : GenericRepository<Product, int>, ICategoryRepository
     {
         private readonly IUnitOfWorkFactory unitOfWorkFactory;
 

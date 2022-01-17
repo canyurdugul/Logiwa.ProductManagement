@@ -30,6 +30,9 @@ namespace Logiwa.ProductManagement.Database.Data.MicrosoftSQLServer
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            modelBuilder.Entity<Category>().HasQueryFilter(p => p.IsDeleted == false);
+            modelBuilder.Entity<Product>().HasQueryFilter(p => p.IsDeleted == false);
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

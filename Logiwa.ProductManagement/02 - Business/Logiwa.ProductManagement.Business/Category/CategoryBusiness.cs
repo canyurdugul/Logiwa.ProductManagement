@@ -1,4 +1,5 @@
-﻿using Logiwa.ProductManagement.Business.Contracts.Abstracts;
+﻿using AutoMapper;
+using Logiwa.ProductManagement.Business.Contracts.Abstracts;
 using Logiwa.ProductManagement.Business.Contracts.Dtos.CategoryDtos;
 using Logiwa.ProductManagement.Database.Repositories.CategoryRepository;
 using Logiwa.ProductManagement.Database.UnitOfWork.Abstracts;
@@ -13,11 +14,13 @@ namespace Logiwa.ProductManagement.Business.Category
 {
     public class CategoryBusiness : ICategoryBusiness
     {
+        private readonly IMapper mapper;
         private readonly ICategoryRepository categoryRepository;
 
-        public CategoryBusiness(ICategoryRepository _categoryRepository)
+        public CategoryBusiness(ICategoryRepository _categoryRepository, IMapper _mapper)
         {
             categoryRepository = _categoryRepository;
+            mapper = _mapper;
         }
 
         public async Task<bool> DeleteById(IUnitOfWork unitOfWork, int id)
@@ -30,33 +33,33 @@ namespace Logiwa.ProductManagement.Business.Category
         public async Task<CategoryDto> GetByIdAsync(IUnitOfWork unitOfWork, int id)
         {
             var data = await categoryRepository.GetByIdAsync(unitOfWork, id);
-            return AutoMapper.Mapper.Map<CategoryDto>(data);
+            return mapper.Map<CategoryDto>(data);
         }
 
         public async Task<IEnumerable<CategoryDto>> GetListAsync(IUnitOfWork unitOfWork)
         {
             var data = await categoryRepository.GetListAsync(unitOfWork);
-            return AutoMapper.Mapper.Map<List<CategoryDto>>(data);
+            return mapper.Map<List<CategoryDto>>(data);
         }
 
-        public async Task InsertAsync(IUnitOfWork unitOfWork, CategoryDto dto)
+        public async Task<bool> InsertAsync(IUnitOfWork unitOfWork, CategoryDto dto)
         {
-            var entity = AutoMapper.Mapper.Map<Entities.Category.Category>(dto);
-            await categoryRepository.InsertAsync(unitOfWork, entity);
+            var entity = mapper.Map<Entities.Product.Product>(dto);
+            return await categoryRepository.InsertAsync(unitOfWork, entity);
         }
 
-        public async Task SoftDeleteAsync(IUnitOfWork unitOfWork, CategoryDto dto)
+        public async Task<bool> SoftDeleteAsync(IUnitOfWork unitOfWork,int id)
         {
-            var entity = AutoMapper.Mapper.Map<Entities.Category.Category>(dto);
-            entity.IsDeleted = true;
-            await categoryRepository.UpdateAsync(unitOfWork, entity);
+            var data = await categoryRepository.GetByIdAsync(unitOfWork, id);
+            data.IsDeleted = true;
+           return await categoryRepository.UpdateAsync(unitOfWork, data);
         }
 
-        public async Task UpdateAsync(IUnitOfWork unitOfWork, CategoryDto dto)
+        public async Task<bool> UpdateAsync(IUnitOfWork unitOfWork, int id, CategoryDto dto)
         {
-            var data = await categoryRepository.GetByIdAsync(unitOfWork, dto.Id);
-            var entity = AutoMapper.Mapper.Map<CategoryDto, Entities.Category.Category>(dto, data);
-            await categoryRepository.UpdateAsync(unitOfWork, entity);
+            var data = await categoryRepository.GetByIdAsync(unitOfWork, id);
+            var entity = mapper.Map<CategoryDto, Entities.Product.Product>(dto, data);
+            return await  categoryRepository.UpdateAsync(unitOfWork, entity);
         }
     }
 }

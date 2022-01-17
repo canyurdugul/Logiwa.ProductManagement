@@ -17,26 +17,30 @@ namespace Logiwa.ProductManagement.Database.Repositories.GenericRepository.Concr
         public GenericRepository(IUnitOfWorkFactory _unitOfWorkFactory) => this.unitOfWorkFactory = _unitOfWorkFactory;
 
 
-        public async Task InsertAsync(IUnitOfWork unitOfWork, TEntity entity)
+        public async Task<bool> InsertAsync(IUnitOfWork unitOfWork, TEntity entity)
         {
             DbContext currentDbContext = unitOfWork.GetCurrentDbContext<DbContext>();
             EntityEntry<TEntity> entityEntry = await currentDbContext.Set<TEntity>().AddAsync(entity);
             var num = await currentDbContext.SaveChangesAsync();
             currentDbContext = (DbContext)null;
+            return num > 0 ? true : false;
         }
 
-        public async Task UpdateAsync(IUnitOfWork unitOfWork, TEntity entity)
+        public async Task<bool> UpdateAsync(IUnitOfWork unitOfWork, TEntity entity)
         {
             DbContext currentDbContext = unitOfWork.GetCurrentDbContext<DbContext>();
             currentDbContext.Entry<TEntity>(entity).State = EntityState.Modified;
-            await currentDbContext.SaveChangesAsync();
+            var num = await currentDbContext.SaveChangesAsync();
+            currentDbContext = (DbContext)null;
+            return num > 0 ? true : false;
         }
 
-        public async Task DeleteAsync(IUnitOfWork unitOfWork, TEntity entity)
+        public async Task<bool> DeleteAsync(IUnitOfWork unitOfWork, TEntity entity)
         {
             DbContext currentDbContext = unitOfWork.GetCurrentDbContext<DbContext>();
             currentDbContext.Entry<TEntity>(entity).State = EntityState.Deleted;
-            await currentDbContext.SaveChangesAsync();
+            var num = await currentDbContext.SaveChangesAsync();
+            return num > 0 ? true : false;
         }
 
         public async Task<TEntity> GetAsync(IUnitOfWork unitOfWork, Expression<Func<TEntity, bool>> predicate)
@@ -54,12 +58,13 @@ namespace Logiwa.ProductManagement.Database.Repositories.GenericRepository.Concr
             return (IEnumerable<TEntity>)await unitOfWork.GetCurrentDbContext<DbContext>().Set<TEntity>().ToListAsync<TEntity>();
         }
 
-        public async Task SoftDeleteAsync(IUnitOfWork unitOfWork, TEntity entity)
+        public async Task<bool> SoftDeleteAsync(IUnitOfWork unitOfWork, TEntity entity)
         {
             DbContext currentDbContext = unitOfWork.GetCurrentDbContext<DbContext>();
             ((object)entity as EntityBase<TKey>).IsDeleted = true;
             currentDbContext.Entry<TEntity>(entity).State = EntityState.Modified;
-            await currentDbContext.SaveChangesAsync();
+            int num = await currentDbContext.SaveChangesAsync();
+            return num > 0 ? true : false;
         }
     }
 }

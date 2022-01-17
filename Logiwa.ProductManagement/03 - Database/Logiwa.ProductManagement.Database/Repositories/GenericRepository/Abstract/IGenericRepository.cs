@@ -1,7 +1,8 @@
 ﻿using Logiwa.ProductManagement.Database.UnitOfWork.Abstracts;
 using Logiwa.ProductManagement.Entities.Base;
 using System;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions; 
 using System.Threading.Tasks;
 

@@ -33,6 +33,7 @@ namespace Logiwa.ProductManagement.Client.Api
         {
 
             services.AddControllers();
+            services.AddHttpClient();
 
             #region Service installation
             var bootstrapper = new BaseBootstrapper(services, this.Configuration);

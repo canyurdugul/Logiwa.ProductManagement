@@ -4,16 +4,14 @@ using Logiwa.ProductManagement.Database.Data.MicrosoftSQLServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Logiwa.ProductManagement.Database.Migrations.MSSQLMigrations
+namespace Logiwa.ProductManagement.Database.Migrations
 {
     [DbContext(typeof(LPMMSSQLDbContext))]
-    [Migration("20220115145921_CategoryMinimumStockQuantity")]
-    partial class CategoryMinimumStockQuantity
+    partial class LPMMSSQLDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

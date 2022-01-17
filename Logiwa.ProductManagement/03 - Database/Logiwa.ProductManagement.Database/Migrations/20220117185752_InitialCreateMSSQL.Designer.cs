@@ -4,14 +4,16 @@ using Logiwa.ProductManagement.Database.Data.MicrosoftSQLServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Logiwa.ProductManagement.Database.Migrations.MSSQLMigrations
+namespace Logiwa.ProductManagement.Database.Migrations
 {
     [DbContext(typeof(LPMMSSQLDbContext))]
-    partial class LPMMSSQLDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220117185752_InitialCreateMSSQL")]
+    partial class InitialCreateMSSQL
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

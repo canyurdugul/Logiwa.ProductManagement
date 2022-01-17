@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Logiwa.ProductManagement.Business.Category;
+using Logiwa.ProductManagement.Client.Api.Models;
+using Logiwa.ProductManagement.Database.UnitOfWork.Abstracts;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,29 +14,26 @@ namespace Logiwa.ProductManagement.Client.Api.Controllers
     [Route("/api/category")]
     public class CategoryController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        private readonly ILogger<CategoryController> logger;
+        private readonly IUnitOfWorkFactory unitOfWorkFactory;
+        private readonly ICategoryBusiness categoryBusiness;
 
-        private readonly ILogger<CategoryController> _logger;
-
-        public CategoryController(ILogger<CategoryController> logger)
+        public CategoryController(ILogger<CategoryController> _logger, IUnitOfWorkFactory _unitOfWorkFactory, ICategoryBusiness _categoryBusiness)
         {
-            _logger = logger;
+            logger = _logger;
+            unitOfWorkFactory = _unitOfWorkFactory;
+            categoryBusiness = _categoryBusiness;
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        [Route("get-all")]
+        public async Task<JsonResult> GetAll()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            using (var uow = unitOfWorkFactory.Create())
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+                var data = await categoryBusiness.GetListAsync(uow);
+                return new JsonResult(ApiResult.Success(data));
+            }
         }
     }
 }

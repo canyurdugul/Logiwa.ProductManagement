@@ -10,7 +10,6 @@ namespace Logiwa.ProductManagement.Database.UnitOfWork.Concrete
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IDbContextFactory dbContextFactory;
         private readonly IConfiguration configuration;
-        private string databaseProvider;
 
         public UnitOfWorkFactory(
           IHttpContextAccessor httpContextAccessor,
@@ -20,13 +19,11 @@ namespace Logiwa.ProductManagement.Database.UnitOfWork.Concrete
             this.httpContextAccessor = httpContextAccessor;
             this.dbContextFactory = dbContextFactory;
             this.configuration = configuration;
-
-            this.databaseProvider = configuration.GetValue<string>("DatabaseProvider");
         }
 
-        public IUnitOfWork Create() => (IUnitOfWork)new UnitOfWork(this.httpContextAccessor, this.dbContextFactory.GetDbContextModel(this.databaseProvider), false);
+        public IUnitOfWork Create() => (IUnitOfWork)new UnitOfWork(this.httpContextAccessor, this.dbContextFactory.GetDbContextModel(), false);
 
-        public IUnitOfWork CreateWithStack() => (IUnitOfWork)new UnitOfWork(this.httpContextAccessor, this.dbContextFactory.GetDbContextModel(this.databaseProvider), true);
+        public IUnitOfWork CreateWithStack() => (IUnitOfWork)new UnitOfWork(this.httpContextAccessor, this.dbContextFactory.GetDbContextModel(), true);
 
         public TDbContext GetDbContextFromStack<TDbContext>() => new UnitOfWork(this.httpContextAccessor).GetDbContextFromStack<TDbContext>(false);
     }

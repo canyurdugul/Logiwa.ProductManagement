@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logiwa.ProductManagement.Business.Contracts.Dtos.Base
+namespace Logiwa.ProductManagement.Core.Base
 {
     public class DtoBase<TKey>
     {

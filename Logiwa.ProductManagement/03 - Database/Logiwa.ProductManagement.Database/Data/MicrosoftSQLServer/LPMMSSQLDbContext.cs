@@ -18,7 +18,7 @@ namespace Logiwa.ProductManagement.Database.Data.MicrosoftSQLServer
             this.configuration = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .AddJsonFile($"appsettings.{appSettings}.json")
-                .Build(); 
+                .Build();
         }
 
         #region DbSets
@@ -29,9 +29,7 @@ namespace Logiwa.ProductManagement.Database.Data.MicrosoftSQLServer
         #region Life Cycle
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly()); 
-
-
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

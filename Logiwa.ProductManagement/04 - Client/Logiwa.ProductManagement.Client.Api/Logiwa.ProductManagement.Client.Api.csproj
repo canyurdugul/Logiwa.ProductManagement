@@ -5,11 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.0.1" />
+    <PackageReference Include="FluentValidation" Version="10.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.9" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\02 - Business\Logiwa.ProductManagement.Business.Contracts\Logiwa.ProductManagement.Business.Contracts.csproj" />
+    <ProjectReference Include="..\..\02 - Business\Logiwa.ProductManagement.Business\Logiwa.ProductManagement.Business.csproj" />
     <ProjectReference Include="..\..\03 - Database\Logiwa.ProductManagement.Database\Logiwa.ProductManagement.Database.csproj" />
   </ItemGroup>
 

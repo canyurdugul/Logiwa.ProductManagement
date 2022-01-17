@@ -44,7 +44,7 @@ namespace Logiwa.ProductManagement.Business.Category
 
         public async Task<bool> InsertAsync(IUnitOfWork unitOfWork, CategoryDto dto)
         {
-            var entity = mapper.Map<Entities.Product.Product>(dto);
+            var entity = mapper.Map<Entities.Category.Category>(dto);
             return await categoryRepository.InsertAsync(unitOfWork, entity);
         }
 
@@ -58,7 +58,7 @@ namespace Logiwa.ProductManagement.Business.Category
         public async Task<bool> UpdateAsync(IUnitOfWork unitOfWork, int id, CategoryDto dto)
         {
             var data = await categoryRepository.GetByIdAsync(unitOfWork, id);
-            var entity = mapper.Map<CategoryDto, Entities.Product.Product>(dto, data);
+            var entity = mapper.Map<CategoryDto, Entities.Category.Category>(dto, data);
             return await  categoryRepository.UpdateAsync(unitOfWork, entity);
         }
     }

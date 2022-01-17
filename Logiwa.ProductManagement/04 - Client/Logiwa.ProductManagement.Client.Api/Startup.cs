@@ -1,3 +1,4 @@
+using Logiwa.ProductManagement.Client.Api.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,10 +62,14 @@ namespace Logiwa.ProductManagement.Client.Api
 
             app.UseAuthorization();
 
+            app.UseMiddleware<ExceptionHandler>();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+           
         }
     }
 }

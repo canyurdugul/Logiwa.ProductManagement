@@ -102,7 +102,6 @@ export class ProductComponent implements OnInit {
         )
         .subscribe((response) => {
           if (response.succeeded) {
-            debugger;
             this.getAll();
             this.hideForm();
           } else {
@@ -110,7 +109,16 @@ export class ProductComponent implements OnInit {
           }
         });
     }
-  }  
+  }
+  public deleteProduct(id: any): void{
+    this.http
+      .delete<Response>(
+        environment.baseApiUrl + this.controllerName + environment.delete + id
+      )
+      .subscribe((response) => {
+        this.getAll();
+      });
+  } 
   public searchProduct(): void {
     this.http
       .post<Response>(
@@ -126,7 +134,6 @@ export class ProductComponent implements OnInit {
   //#region  form  operations
   public createForm(): void {
     const { id, title, description, stockQuantity, categoryId } = this.selected;
-    debugger;
     this.form = new FormGroup({
       id: new FormControl(id ?? null),
       title: new FormControl(title ?? null, [
@@ -153,14 +160,7 @@ export class ProductComponent implements OnInit {
       minimumStockQuantity: new FormControl(minimumStockQuantity ?? null),
       maximumStockQuantity: new FormControl(maximumStockQuantity ?? null),
     });
-  }
-  public showSearchForm():void{
-    this.searchFormDisplayStyle = 'block';
-    this.createSearchForm();
-  }
-  public hideSearchForm():void{
-    this.searchFormDisplayStyle = 'none';
-  }
+  } 
   showForm(): void {
     this.displayStyle = 'block';
   }

@@ -87,7 +87,7 @@ namespace Logiwa.ProductManagement.Client.Api.Controllers
         {
             using (var uow = unitOfWorkFactory.Create())
             {
-                var result = await productBusiness.SoftDeleteAsync(uow, id);
+                var result = await productBusiness.DeleteById(uow, id);
                 return new JsonResult(result ? ApiResult.Success("Success") : ApiResult.Fail("Error"));
             }
         }

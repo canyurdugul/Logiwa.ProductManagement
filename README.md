@@ -27,3 +27,8 @@ Go to \frontend\logiwa-product-management folder and run
 ```sh
 npm i
 ```
+
+* Then
+```sh
+ng serve
+```

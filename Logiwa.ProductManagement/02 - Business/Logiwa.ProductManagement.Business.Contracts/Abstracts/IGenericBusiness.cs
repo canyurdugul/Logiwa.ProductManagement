@@ -19,6 +19,5 @@ namespace Logiwa.ProductManagement.Business.Contracts.Abstracts
         Task<bool> InsertAsync(IUnitOfWork unitOfWork, TDto dto);
         Task<bool> UpdateAsync(IUnitOfWork unitOfWork, TKey id, TDto dto);
         Task<bool> DeleteById(IUnitOfWork unitOfWork, TKey id);
-        Task<bool> SoftDeleteAsync(IUnitOfWork unitOfWork, TKey id);
     }
 }

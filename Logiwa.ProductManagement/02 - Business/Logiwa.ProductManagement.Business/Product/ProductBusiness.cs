@@ -82,5 +82,10 @@ namespace Logiwa.ProductManagement.Business.Category
             var entity = mapper.Map<ProductDto, Entities.Product.Product>(dto, data);
             return await productRepository.UpdateAsync(unitOfWork, entity);
         }
+
+        public IQueryable<Entities.Product.Product> GetProductsByCategoryId(IUnitOfWork unitOfWork, int categoryId)
+        {
+            return productRepository.GetIQueryable(unitOfWork).Where(w => w.CategoryId == categoryId);
+        }
     }
 }

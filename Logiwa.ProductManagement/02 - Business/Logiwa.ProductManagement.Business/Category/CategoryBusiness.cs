@@ -3,6 +3,7 @@ using Logiwa.ProductManagement.Business.Contracts.Abstracts;
 using Logiwa.ProductManagement.Business.Contracts.Dtos.CategoryDtos;
 using Logiwa.ProductManagement.Business.Contracts.Dtos.ProductDtos;
 using Logiwa.ProductManagement.Database.Repositories.CategoryRepository;
+using Logiwa.ProductManagement.Database.Repositories.ProductRepository;
 using Logiwa.ProductManagement.Database.UnitOfWork.Abstracts;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,14 @@ namespace Logiwa.ProductManagement.Business.Category
     {
         private readonly IMapper mapper;
         private readonly ICategoryRepository categoryRepository;
+        private readonly IProductRepository productRepository;
 
-        public CategoryBusiness(ICategoryRepository _categoryRepository, IMapper _mapper)
+        public CategoryBusiness(IMapper _mapper,ICategoryRepository _categoryRepository, IProductRepository _productRepository )
         {
-            categoryRepository = _categoryRepository;
             mapper = _mapper;
+            categoryRepository = _categoryRepository;
+            productRepository = _productRepository;
+
         }
 
         public async Task<bool> DeleteById(IUnitOfWork unitOfWork, int id)
@@ -50,18 +54,11 @@ namespace Logiwa.ProductManagement.Business.Category
             return await categoryRepository.InsertAsync(unitOfWork, entity);
         }
 
-        public async Task<bool> SoftDeleteAsync(IUnitOfWork unitOfWork,int id)
-        {
-            var data = await categoryRepository.GetByIdAsync(unitOfWork, id);
-            data.IsDeleted = true;
-           return await categoryRepository.UpdateAsync(unitOfWork, data);
-        }
-
         public async Task<bool> UpdateAsync(IUnitOfWork unitOfWork, int id, CategoryDto dto)
         {
             var data = await categoryRepository.GetByIdAsync(unitOfWork, id);
             var entity = mapper.Map<CategoryDto, Entities.Category.Category>(dto, data);
-            return await  categoryRepository.UpdateAsync(unitOfWork, entity);
+            return await categoryRepository.UpdateAsync(unitOfWork, entity);
         }
     }
 }

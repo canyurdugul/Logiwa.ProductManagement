@@ -37,7 +37,7 @@ export class CategoryComponent implements OnInit {
         environment.baseApiUrl + this.controllerName + environment.getAll
       )
       .subscribe((response) => {
-        debugger;
+
         this.gridData = response.data;
       });
   }
@@ -87,7 +87,6 @@ export class CategoryComponent implements OnInit {
         )
         .subscribe((response) => {
           if (response.succeeded) {
-            debugger;
             this.getAll();
             this.hideForm();
           } else {
@@ -96,12 +95,20 @@ export class CategoryComponent implements OnInit {
         });
     }
   }
+  public deleteCategory(id: any): void{
+    this.http
+      .delete<Response>(
+        environment.baseApiUrl + this.controllerName + environment.delete + id
+      )
+      .subscribe((response) => {
+        this.getAll();
+      });
+  }
   //#endregion
 
   //#region  form operations
   public createForm(): void {
     const { id, name, minimumStockQuantity } = this.selected;
-    debugger;
     this.form = new FormGroup({
       id: new FormControl(id ?? null),
       name: new FormControl(name ?? null, [Validators.minLength(1),  Validators.required]),

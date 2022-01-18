@@ -1,5 +1,6 @@
-﻿using Logiwa.ProductManagement.Business.Contracts.Dtos.Base;
+﻿
 using Logiwa.ProductManagement.Business.Contracts.Dtos.CategoryDtos;
+using Logiwa.ProductManagement.Core.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;

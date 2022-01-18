@@ -29,12 +29,22 @@ namespace Logiwa.ProductManagement.Database.Data.MicrosoftSQLServer
         #region Life Cycle
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly()); 
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+            modelBuilder.Entity<Product>()
+               .HasQueryFilter(p => p.IsDeleted == false)
+                .HasOne(o => o.Category)
+                .WithMany(m => m.Products)
+                .HasForeignKey(f => f.CategoryId);
+
+
+            modelBuilder.Entity<Category>().HasQueryFilter(p => p.IsDeleted == false)
+                .HasMany(m => m.Products);
 
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.UseLazyLoadingProxies();
             optionsBuilder.UseSqlServer(configuration.GetConnectionString("MsSqlDefaultConnection"));
 
         }

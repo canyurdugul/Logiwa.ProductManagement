@@ -8,6 +8,11 @@ namespace Logiwa.ProductManagement.Business.Contracts.Validations
     {
         private int MinimumStockQuantity = 0;
 
+        public ProductValidation()
+        {
+
+        }
+
         public ProductValidation(int minimumStockQuantity)
         {
             this.MinimumStockQuantity = minimumStockQuantity;

@@ -1,0 +1,282 @@
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-12" >
+        <div>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="title"> Keyword </label>
+                <input
+                  id="keyword"
+                  [(ngModel)]="searchProductDto.keyword"
+                  class="form-control"
+                  autofocus
+                />
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="minimum-stock-quantity">
+                  Min. Stock Quantity
+                </label>
+                <input
+                  id="minimum-stock-quantity"
+                  type="number"
+                  [(ngModel)]="searchProductDto.minimumStockQuantity" 
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="maximumStockQuantity"> Max. Stock Quantity </label>
+                <input
+                  id="max-stock-quantity"
+                  type="number" 
+                  [(ngModel)]="searchProductDto.maximumStockQuantity" 
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label for="searchButton">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </label>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="searchButton"
+                (click)="searchProduct()"
+              >
+                Search Product
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-md-4">
+        <button type="button" class="btn btn-primary" (click)="createProduct()">
+          Create
+        </button>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-md-12">
+        <table datatable [dtTrigger]="dtTrigger" class="table table-responsive">
+          <thead>
+            <tr>
+              <th>Product Id</th>
+              <th>Category Name</th>
+              <th>Product Title</th>
+              <th>Stock Quantity</th>
+              <th>Status</th>
+              <th>#</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let product of gridData">
+              <td>{{ product.id }}</td>
+              <td>{{ product.category.name }}</td>
+              <td>{{ product.title }}</td>
+              <td>{{ product.stockQuantity }}</td>
+              <td>
+                <span
+                  *ngIf="
+                    product.stockQuantity >
+                    product.category.minimumStockQuantity 
+                    ||
+                    product.stockQuantity ===
+                    product.category.minimumStockQuantity 
+                  "
+                  style="background-color: green"
+                  >ONLINE</span
+                >
+                <span
+                  *ngIf="
+                    product.stockQuantity <
+                    product.category.minimumStockQuantity
+                  "
+                  style="background-color: red"
+                  >OFFLINE</span
+                >
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="editProduct(product.id)"
+                >
+                  Edit
+                </button>
+                <button type="button" class="btn btn-danger">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  [ngStyle]="{ display: displayStyle }"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Product</h4>
+      </div>
+      <div class="modal-body" *ngIf="form">
+        <form [formGroup]="form" (ngSubmit)="saveOrUpdate()" validateOnSubmit>
+          <div class="mt-2 fade-in-top">
+            <input type="hidden" formControlName="id" />
+            <div class="form-group">
+              <label for="title"> Title </label>
+              <input
+                id="title"
+                formControlName="title"
+                class="form-control"
+                autofocus
+              />
+            </div>
+            <div class="form-group">
+              <label for="description"> Description </label>
+              <input
+                id="description"
+                formControlName="description"
+                class="form-control"
+                autofocus
+              />
+            </div>
+            <div class="form-group">
+              <label for="stock-quantity"> Stock Quantity </label>
+              <input
+                id="stock-quantity"
+                formControlName="stockQuantity"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group">
+              <label for="category-id"> Category </label>
+              <select
+                *ngIf="categoriesData"
+                formControlName="categoryId"
+                id="category-id"
+                class="form-control"
+              >
+                <option [ngValue]="null" disabled>Select Category</option>
+                <option
+                  *ngFor="let category of categoriesData"
+                  [ngValue]="category.id"
+                  [selected]="category.id == selected.id"
+                >
+                  {{ category.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="saveOrUpdate()"
+          [disabled]="form?.invalid"
+        >
+          Save
+        </button>
+        <button type="button" class="btn btn-danger" (click)="hideForm()">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  [ngStyle]="{ display: searchFormDisplayStyle }"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Product</h4>
+      </div>
+      <div class="modal-body" *ngIf="form">
+        <form [formGroup]="form" (ngSubmit)="saveOrUpdate()" validateOnSubmit>
+          <div class="mt-2 fade-in-top">
+            <input type="hidden" formControlName="id" />
+            <div class="form-group">
+              <label for="title"> Title </label>
+              <input
+                id="title"
+                formControlName="title"
+                class="form-control"
+                autofocus
+              />
+            </div>
+            <div class="form-group">
+              <label for="description"> Description </label>
+              <input
+                id="description"
+                formControlName="description"
+                class="form-control"
+                autofocus
+              />
+            </div>
+            <div class="form-group">
+              <label for="stock-quantity"> Stock Quantity </label>
+              <input
+                id="stock-quantity"
+                formControlName="stockQuantity"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group">
+              <label for="category-id"> Category </label>
+              <select
+                *ngIf="categoriesData"
+                formControlName="categoryId"
+                id="category-id"
+                class="form-control"
+              >
+                <option [ngValue]="null" disabled>Select Category</option>
+                <option
+                  *ngFor="let category of categoriesData"
+                  [ngValue]="category.id"
+                  [selected]="category.id == selected.id"
+                >
+                  {{ category.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="saveOrUpdate()"
+          [disabled]="form?.invalid"
+        >
+          Save
+        </button>
+        <button type="button" class="btn btn-danger" (click)="hideForm()">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -18,7 +18,7 @@ namespace Logiwa.ProductManagement.Database.Data.MicrosoftSQLServer
             this.configuration = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .AddJsonFile($"appsettings.{appSettings}.json")
-                .Build();
+                .Build(); 
         }
 
         #region DbSets
@@ -31,11 +31,20 @@ namespace Logiwa.ProductManagement.Database.Data.MicrosoftSQLServer
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-            modelBuilder.Entity<Category>().HasQueryFilter(p => p.IsDeleted == false);
-            modelBuilder.Entity<Product>().HasQueryFilter(p => p.IsDeleted == false);
+            modelBuilder.Entity<Product>()
+               .HasQueryFilter(p => p.IsDeleted == false)
+                .HasOne(o => o.Category)
+                .WithMany(m => m.Products)
+                .HasForeignKey(f => f.CategoryId);
+
+
+            modelBuilder.Entity<Category>().HasQueryFilter(p => p.IsDeleted == false)
+                .HasMany(m => m.Products);
+
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.UseLazyLoadingProxies();
             optionsBuilder.UseSqlServer(configuration.GetConnectionString("MsSqlDefaultConnection"));
 
         }

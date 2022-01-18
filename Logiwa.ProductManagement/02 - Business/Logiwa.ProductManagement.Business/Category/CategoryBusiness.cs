@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Logiwa.ProductManagement.Business.Contracts.Abstracts;
 using Logiwa.ProductManagement.Business.Contracts.Dtos.CategoryDtos;
+using Logiwa.ProductManagement.Business.Contracts.Dtos.ProductDtos;
 using Logiwa.ProductManagement.Database.Repositories.CategoryRepository;
 using Logiwa.ProductManagement.Database.UnitOfWork.Abstracts;
 using System;
@@ -41,6 +42,7 @@ namespace Logiwa.ProductManagement.Business.Category
             var data = await categoryRepository.GetListAsync(unitOfWork);
             return mapper.Map<List<CategoryDto>>(data);
         }
+
 
         public async Task<bool> InsertAsync(IUnitOfWork unitOfWork, CategoryDto dto)
         {

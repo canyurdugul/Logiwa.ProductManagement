@@ -19,7 +19,7 @@ namespace Logiwa.ProductManagement.Business.Contracts.AutoMapper.Profiles
                 .ForMember(dest => dest.StockQuantity, opts => opts.MapFrom(src => src.StockQuantity))
                 .ForMember(dest => dest.CategoryId, opts => opts.MapFrom(src => src.CategoryId))
                 .ForMember(dest => dest.IsDeleted, opts => opts.MapFrom(src => src.IsDeleted))
-                .ForMember(dest => dest.CreatedUtc, opts => opts.MapFrom(src => src.CreatedUtc)) ;
+                .ForMember(dest => dest.CreatedUtc, opts => opts.MapFrom(src => src.CreatedUtc));
 
             CreateMap<ProductDto,Entities.Product.Product>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore())

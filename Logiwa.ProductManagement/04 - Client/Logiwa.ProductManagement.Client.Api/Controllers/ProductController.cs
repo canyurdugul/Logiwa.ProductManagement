@@ -15,14 +15,11 @@ namespace Logiwa.ProductManagement.Client.Api.Controllers
     [Route("/api/product")]
     public class ProductController : ControllerBase
     {
-
-
         private readonly ILogger<ProductController> _logger;
         private readonly IUnitOfWorkFactory unitOfWorkFactory;
         private readonly IProductBusiness productBusiness;
 
-       
-    public ProductController(ILogger<ProductController> logger, IUnitOfWorkFactory _unitOfWorkFactory, IProductBusiness _productBusiness)
+        public ProductController(ILogger<ProductController> logger, IUnitOfWorkFactory _unitOfWorkFactory, IProductBusiness _productBusiness)
         {
             logger = _logger;
             unitOfWorkFactory = _unitOfWorkFactory;
@@ -35,8 +32,19 @@ namespace Logiwa.ProductManagement.Client.Api.Controllers
         {
             using (var uow = unitOfWorkFactory.Create())
             {
-                var data = await productBusiness.GetListAsync(uow);
-                return new JsonResult(ApiResult.Success(data));
+                var result = await productBusiness.GetListAsync(uow);
+                return new JsonResult(ApiResult.Success(result));
+            }
+        }
+
+        [HttpPost]
+        [Route("search")]
+        public  JsonResult Search([FromBody] SearchProductDto searchData)
+        {
+            using (var uow = unitOfWorkFactory.Create())
+            {
+                var result = productBusiness.SearchProduct(uow, searchData);
+                return new JsonResult(ApiResult.Success(result));
             }
         }
 
@@ -46,8 +54,8 @@ namespace Logiwa.ProductManagement.Client.Api.Controllers
         {
             using (var uow = unitOfWorkFactory.Create())
             {
-                var data = await productBusiness.GetByIdAsync(uow, id);
-                return new JsonResult(data == null ? ApiResult.Fail("No data found") : ApiResult.Success(data));
+                var result = await productBusiness.GetByIdAsync(uow, id);
+                return new JsonResult(result == null ? ApiResult.Fail("No data found") : ApiResult.Success(result));
             }
         }
 

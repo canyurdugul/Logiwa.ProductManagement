@@ -12,20 +12,22 @@ namespace Logiwa.ProductManagement.Business.Contracts.AutoMapper.Profiles
     {
         public CategoryProfile()
         {
-            CreateMap<Entities.Category.Category, CategoryDto>() 
+            CreateMap<Entities.Category.Category, CategoryDto>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Name))
                 .ForMember(dest => dest.MinimumStockQuantity, opts => opts.MapFrom(src => src.MinimumStockQuantity))
                 .ForMember(dest => dest.IsDeleted, opts => opts.MapFrom(src => src.IsDeleted))
-                .ForMember(dest => dest.CreatedUtc, opts => opts.MapFrom(src => src.CreatedUtc))      ;
+                .ForMember(dest => dest.CreatedUtc, opts => opts.MapFrom(src => src.CreatedUtc))
+                .ForMember(dest => dest.Products, opts => opts.Ignore());
 
 
-            CreateMap<CategoryDto,Entities.Category.Category>()
+            CreateMap<CategoryDto, Entities.Category.Category>()
                 .ForMember(dest => dest.Id, opts => opts.Ignore())
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.Name))
                 .ForMember(dest => dest.MinimumStockQuantity, opts => opts.MapFrom(src => src.MinimumStockQuantity))
                 .ForMember(dest => dest.IsDeleted, opts => opts.MapFrom(src => src.IsDeleted))
-                .ForMember(dest => dest.CreatedUtc, opts => opts.MapFrom(src => src.CreatedUtc));
+                .ForMember(dest => dest.CreatedUtc, opts => opts.MapFrom(src => src.CreatedUtc))
+                .ForMember(dest => dest.Products, opts => opts.Ignore());
         }
     }
 }

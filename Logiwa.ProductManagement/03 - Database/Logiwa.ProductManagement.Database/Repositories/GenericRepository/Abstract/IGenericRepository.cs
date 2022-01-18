@@ -13,6 +13,7 @@ namespace Logiwa.ProductManagement.Database.Repositories.GenericRepository.Abstr
         Task<TEntity> GetByIdAsync(IUnitOfWork unitOfWork, TKey Id);
         Task<TEntity> GetAsync(IUnitOfWork unitOfWork, Expression<Func<TEntity, bool>> predicate);
         Task<IEnumerable<TEntity>> GetListAsync(IUnitOfWork unitOfWork);
+        IQueryable<TEntity> GetIQueryable(IUnitOfWork unitOfWork);
         Task<bool> InsertAsync(IUnitOfWork unitOfWork, TEntity entity);
         Task<bool> UpdateAsync(IUnitOfWork unitOfWork, TEntity entity);
         Task<bool> DeleteAsync(IUnitOfWork unitOfWork, TEntity entity);

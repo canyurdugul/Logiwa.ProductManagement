@@ -1,5 +1,7 @@
 ﻿using Logiwa.ProductManagement.Business.Category;
 using Logiwa.ProductManagement.Business.Contracts.Dtos.CategoryDtos;
+using Logiwa.ProductManagement.Business.Contracts.Dtos.ProductDtos;
+using Logiwa.ProductManagement.Business.Contracts.Validations;
 using Logiwa.ProductManagement.Client.Api.Models;
 using Logiwa.ProductManagement.Database.UnitOfWork.Abstracts;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +54,11 @@ namespace Logiwa.ProductManagement.Client.Api.Controllers
         [Route("create")]
         public async Task<JsonResult> Create([FromBody] CategoryDto data)
         {
+            var categoryValidator = new CategoryValidation();
+            var validationResult = categoryValidator.Validate(data);
+
+            if (validationResult.Failed) return new JsonResult(ApiResult.Fail(validationResult.Message));
+
             using (var uow = unitOfWorkFactory.Create())
             {
                 var result = await categoryBusiness.InsertAsync(uow, data);
@@ -63,6 +70,11 @@ namespace Logiwa.ProductManagement.Client.Api.Controllers
         [Route("update/{id}")]
         public async Task<JsonResult> Update(int id, [FromBody] CategoryDto data)
         {
+            var categoryValidator = new CategoryValidation();
+            var validationResult = categoryValidator.Validate(data);
+
+            if (validationResult.Failed) return new JsonResult(ApiResult.Fail(validationResult.Message));
+
             using (var uow = unitOfWorkFactory.Create())
             {
                 var result = await categoryBusiness.UpdateAsync(uow, id, data);

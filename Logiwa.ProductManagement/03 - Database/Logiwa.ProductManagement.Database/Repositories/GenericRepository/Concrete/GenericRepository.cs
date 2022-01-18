@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions; 
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Logiwa.ProductManagement.Database.Repositories.GenericRepository.Concrete
@@ -65,6 +65,11 @@ namespace Logiwa.ProductManagement.Database.Repositories.GenericRepository.Concr
             currentDbContext.Entry<TEntity>(entity).State = EntityState.Modified;
             int num = await currentDbContext.SaveChangesAsync();
             return num > 0 ? true : false;
+        }
+
+        public IQueryable<TEntity> GetIQueryable(IUnitOfWork unitOfWork)
+        {
+            return (IQueryable<TEntity>)unitOfWork.GetCurrentDbContext<DbContext>().Set<TEntity>().AsQueryable();
         }
     }
 }

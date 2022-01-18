@@ -8,6 +8,6 @@ namespace Logiwa.ProductManagement.Client.Api.Middlewares
     public class ErrorResultModel
     {
         public int StatusCode { get; set; }
-        public string Message { get; set; }
+        public string Message { get; set; }    
     }
 }

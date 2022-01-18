@@ -23,7 +23,7 @@ update-database
 ```
 
 * For frontend environment (Angular 13)
-Go to Logiwa.ProductManagement\frontend\logiwa-product-management folder and run
+Go to \frontend\logiwa-product-management folder and run
 ```sh
 npm i
 ```

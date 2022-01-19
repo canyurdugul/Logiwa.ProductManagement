@@ -1,4 +1,5 @@
 ﻿using Logiwa.ProductManagement.Business.Contracts.Dtos.ProductDtos;
+using Logiwa.ProductManagement.Business.Contracts.Validations;
 using Logiwa.ProductManagement.Business.Product;
 using Logiwa.ProductManagement.Client.Api.Models;
 using Logiwa.ProductManagement.Database.UnitOfWork.Abstracts;
@@ -63,6 +64,11 @@ namespace Logiwa.ProductManagement.Client.Api.Controllers
         [Route("create")]
         public async Task<JsonResult> Create([FromBody] ProductDto data)
         {
+            var productValidator = new ProductValidation();
+            var validationResult = productValidator.Validate(data);
+
+            if (validationResult.Failed) return new JsonResult(ApiResult.Fail(validationResult.Message));
+
             using (var uow = unitOfWorkFactory.Create())
             {
                 var result = await productBusiness.InsertAsync(uow, data);

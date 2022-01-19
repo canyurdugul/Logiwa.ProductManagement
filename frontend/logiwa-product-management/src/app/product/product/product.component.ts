@@ -13,11 +13,13 @@ import { SearchProductDto } from './model/search-product-dto.model';
 import Swal from 'sweetalert2';
 import { ProductService } from './service/product.service';
 import { ProductDto } from './model/product-dto.model';
+import { CategoryService } from 'src/app/category/category/service/category.service';
 
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css'],
+  providers: [ProductService, CategoryService],
 })
 export class ProductComponent implements OnInit {
   //#region definitions
@@ -36,7 +38,8 @@ export class ProductComponent implements OnInit {
 
   constructor(
     public readonly http: HttpClient,
-    private productService: ProductService
+    private productService: ProductService,
+    private categoryService: CategoryService
   ) {}
   ngOnInit(): void {
     this.getCategories();
@@ -51,11 +54,9 @@ export class ProductComponent implements OnInit {
     });
   }
   public getCategories(): void {
-    this.http
-      .get<Response>(environment.baseApiUrl + 'category/' + environment.getAll)
-      .subscribe((response) => {
-        this.categoriesData = response.data;
-      });
+    this.categoryService.getAll().subscribe((response) => {
+      this.categoriesData = response.data;
+    });
   }
   //#endregion
 

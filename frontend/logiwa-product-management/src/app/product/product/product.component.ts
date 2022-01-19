@@ -6,11 +6,13 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { max, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Response } from 'src/app/models/response.model';
-import { SearchProductDto } from './model/search.model';
+import { SearchProductDto } from './model/search-product-dto.model';
 import Swal from 'sweetalert2';
+import { ProductService } from './service/product.service';
+import { ProductDto } from './model/product-dto.model';
 
 @Component({
   selector: 'app-product',
@@ -19,7 +21,6 @@ import Swal from 'sweetalert2';
 })
 export class ProductComponent implements OnInit {
   //#region definitions
-  private readonly controllerName = 'product/';
   public gridData: any[] = [];
   public categoriesData: any[] = [];
   public selected: any;
@@ -33,7 +34,10 @@ export class ProductComponent implements OnInit {
   dtTrigger: Subject<any> = new Subject<any>();
   //#endregion
 
-  constructor(public readonly http: HttpClient, private fb: FormBuilder) {}
+  constructor(
+    public readonly http: HttpClient,
+    private productService: ProductService
+  ) {}
   ngOnInit(): void {
     this.getCategories();
     this.getAll();
@@ -42,13 +46,9 @@ export class ProductComponent implements OnInit {
 
   //#region get data
   public getAll(): void {
-    this.http
-      .get<Response>(
-        environment.baseApiUrl + this.controllerName + environment.getAll
-      )
-      .subscribe((response) => {
-        this.gridData = response.data;
-      });
+    this.productService.getAll().subscribe((response) => {
+      this.gridData = response.data;
+    });
   }
   public getCategories(): void {
     this.http
@@ -66,51 +66,32 @@ export class ProductComponent implements OnInit {
     this.showForm();
   }
   public editProduct(id: any): void {
-    this.http
-      .get<Response>(
-        environment.baseApiUrl + this.controllerName + environment.get + id
-      )
-      .subscribe((response) => {
-        this.selected = response.data;
-        this.createForm();
-        this.showForm();
-      });
+    this.productService.get(id).subscribe((response) => {
+      this.selected = response.data;
+      this.createForm();
+      this.showForm();
+    });
   }
   public saveOrUpdate(): void {
-    this.selected = this.form.value;
+    this.selected = this.form.value as ProductDto;
     if (this.selected.id > 0) {
-      this.http
-        .put<Response>(
-          environment.baseApiUrl +
-            this.controllerName +
-            environment.update +
-            this.selected.id,
-          this.selected
-        )
+      this.productService
+        .update(this.selected.id, this.selected)
         .subscribe((response) => {
           if (response.succeeded) {
             Swal.fire('Edited', '', 'success');
             this.getAll();
             this.hideForm();
-          } else {
-            Swal.fire('Error', '', 'error');
           }
         });
     } else {
-      this.http
-        .post<Response>(
-          environment.baseApiUrl + this.controllerName + environment.create,
-          this.selected
-        )
-        .subscribe((response) => {
-          if (response.succeeded) {
-            Swal.fire('Created', '', 'success');
-            this.getAll();
-            this.hideForm();
-          } else {
-            Swal.fire('Error', '', 'error');
-          }
-        });
+      this.productService.create(this.selected).subscribe((response) => {
+        if (response.succeeded) {
+          Swal.fire('Created', '', 'success');
+          this.getAll();
+          this.hideForm();
+        }
+      });
     }
   }
   public deleteProduct(id: any): void {
@@ -122,26 +103,16 @@ export class ProductComponent implements OnInit {
       showCancelButton: true,
     }).then((result) => {
       if (result.value) {
-        this.http
-          .delete<Response>(
-            environment.baseApiUrl +
-              this.controllerName +
-              environment.delete +
-              id
-          )
-          .subscribe((response) => {
-            this.getAll();
-            Swal.fire('Deleted', '', 'success');
-          });
+        this.productService.delete(id).subscribe((response) => {
+          this.getAll();
+          Swal.fire('Deleted', '', 'success');
+        });
       }
     });
   }
   public searchProduct(): void {
-    this.http
-      .post<Response>(
-        environment.baseApiUrl + this.controllerName + environment.search,
-        this.searchProductDto
-      )
+    this.productService
+      .searchProduct(this.searchProductDto)
       .subscribe((response) => {
         this.gridData = response.data;
       });

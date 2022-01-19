@@ -10,6 +10,7 @@ import { max, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Response } from 'src/app/models/response.model';
 import { SearchProductDto } from './model/search.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-product',
@@ -26,7 +27,7 @@ export class ProductComponent implements OnInit {
     keyword: '',
   };
   public displayStyle: string = 'none';
-  public searchFormDisplayStyle : string = 'none';
+  public searchFormDisplayStyle: string = 'none';
   public form: any;
   public searchForm: any;
   dtTrigger: Subject<any> = new Subject<any>();
@@ -53,7 +54,7 @@ export class ProductComponent implements OnInit {
     this.http
       .get<Response>(environment.baseApiUrl + 'category/' + environment.getAll)
       .subscribe((response) => {
-        this.categoriesData = response.data; 
+        this.categoriesData = response.data;
       });
   }
   //#endregion
@@ -88,10 +89,11 @@ export class ProductComponent implements OnInit {
         )
         .subscribe((response) => {
           if (response.succeeded) {
+            Swal.fire('Edited', '', 'success');
             this.getAll();
             this.hideForm();
           } else {
-            console.log('error');
+            Swal.fire('Error', '', 'error');
           }
         });
     } else {
@@ -102,23 +104,38 @@ export class ProductComponent implements OnInit {
         )
         .subscribe((response) => {
           if (response.succeeded) {
+            Swal.fire('Created', '', 'success');
             this.getAll();
             this.hideForm();
           } else {
-            console.log('error');
+            Swal.fire('Error', '', 'error');
           }
         });
     }
   }
-  public deleteProduct(id: any): void{
-    this.http
-      .delete<Response>(
-        environment.baseApiUrl + this.controllerName + environment.delete + id
-      )
-      .subscribe((response) => {
-        this.getAll();
-      });
-  } 
+  public deleteProduct(id: any): void {
+    Swal.fire({
+      icon: 'question',
+      title: 'Delete',
+      text: 'Are you sure want to delete this item ?',
+      showConfirmButton: true,
+      showCancelButton: true,
+    }).then((result) => {
+      if (result.value) {
+        this.http
+          .delete<Response>(
+            environment.baseApiUrl +
+              this.controllerName +
+              environment.delete +
+              id
+          )
+          .subscribe((response) => {
+            this.getAll();
+            Swal.fire('Deleted', '', 'success');
+          });
+      }
+    });
+  }
   public searchProduct(): void {
     this.http
       .post<Response>(
@@ -126,7 +143,7 @@ export class ProductComponent implements OnInit {
         this.searchProductDto
       )
       .subscribe((response) => {
-        this.gridData = response.data; 
+        this.gridData = response.data;
       });
   }
   //#endregion
@@ -160,7 +177,7 @@ export class ProductComponent implements OnInit {
       minimumStockQuantity: new FormControl(minimumStockQuantity ?? null),
       maximumStockQuantity: new FormControl(maximumStockQuantity ?? null),
     });
-  } 
+  }
   showForm(): void {
     this.displayStyle = 'block';
   }

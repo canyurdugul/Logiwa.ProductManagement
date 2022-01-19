@@ -10,6 +10,7 @@ import { CategoryDto } from './model/category-dto.model';
   selector: 'app-category',
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.css'],
+  providers: [CategoryService],
 })
 export class CategoryComponent implements OnInit {
   //#region definitions

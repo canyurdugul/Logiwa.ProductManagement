@@ -58,7 +58,7 @@ namespace Logiwa.ProductManagement.Business.Category
             if (searchProductDto.MinimumStockQuantity.HasValue)
                 data = data.Where(w => w.StockQuantity >= searchProductDto.MinimumStockQuantity.Value);
             if (searchProductDto.MaximumStockQuantity.HasValue)
-                data = data.Where(w => w.StockQuantity >= searchProductDto.MinimumStockQuantity.Value);             
+                data = data.Where(w => w.StockQuantity <= searchProductDto.MaximumStockQuantity.Value);             
 
             return mapper.Map<List<ProductDto>>(data.ToList());
         }

@@ -9,6 +9,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-category',
@@ -37,7 +38,6 @@ export class CategoryComponent implements OnInit {
         environment.baseApiUrl + this.controllerName + environment.getAll
       )
       .subscribe((response) => {
-
         this.gridData = response.data;
       });
   }
@@ -73,10 +73,11 @@ export class CategoryComponent implements OnInit {
         )
         .subscribe((response) => {
           if (response.succeeded) {
+            Swal.fire('Edited', '', 'success');
             this.getAll();
             this.hideForm();
           } else {
-            console.log('error');
+            Swal.fire('Error', '', 'error');
           }
         });
     } else {
@@ -87,22 +88,37 @@ export class CategoryComponent implements OnInit {
         )
         .subscribe((response) => {
           if (response.succeeded) {
+            Swal.fire('Created', '', 'success');
             this.getAll();
             this.hideForm();
           } else {
-            console.log('error');
+            Swal.fire('Error', '', 'error');
           }
         });
     }
   }
-  public deleteCategory(id: any): void{
-    this.http
-      .delete<Response>(
-        environment.baseApiUrl + this.controllerName + environment.delete + id
-      )
-      .subscribe((response) => {
-        this.getAll();
-      });
+  public deleteCategory(id: any): void {
+    Swal.fire({
+      icon: 'question',
+      title: 'Delete',
+      text: 'Are you sure want to delete this item ?',
+      showConfirmButton: true,
+      showCancelButton: true,
+    }).then((result) => {
+      if (result.value) {
+        this.http
+          .delete<Response>(
+            environment.baseApiUrl +
+              this.controllerName +
+              environment.delete +
+              id
+          )
+          .subscribe((response) => {
+            this.getAll();
+            Swal.fire('Deleted', '', 'success');
+          });
+      }
+    });
   }
   //#endregion
 
@@ -111,7 +127,10 @@ export class CategoryComponent implements OnInit {
     const { id, name, minimumStockQuantity } = this.selected;
     this.form = new FormGroup({
       id: new FormControl(id ?? null),
-      name: new FormControl(name ?? null, [Validators.minLength(1),  Validators.required]),
+      name: new FormControl(name ?? null, [
+        Validators.minLength(1),
+        Validators.required,
+      ]),
       minimumStockQuantity: new FormControl(minimumStockQuantity ?? 0, [
         Validators.required,
         Validators.min(0),

@@ -44,7 +44,6 @@ export class ProductComponent implements OnInit {
   ngOnInit(): void {
     this.getCategories();
     this.getAll();
-    this.createSearchForm();
   }
 
   //#region get data
@@ -139,15 +138,6 @@ export class ProductComponent implements OnInit {
         Validators.required,
       ]),
       categoryId: new FormControl(categoryId ?? 0, [Validators.min(1)]),
-    });
-  }
-  public createSearchForm(): void {
-    const { keyword, minimumStockQuantity, maximumStockQuantity } =
-      this.searchProductDto;
-    this.searchForm = new FormControl({
-      keyword: new FormControl(keyword ?? null),
-      minimumStockQuantity: new FormControl(minimumStockQuantity ?? null),
-      maximumStockQuantity: new FormControl(maximumStockQuantity ?? null),
     });
   }
   showForm(): void {
